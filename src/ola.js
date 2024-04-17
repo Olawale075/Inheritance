@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet,ScrollView, TextInput, Button } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TextInput, Button, Alert } from 'react-native'
 import React, { useState } from 'react'
 
 import Dropdown from './dropDowm/Dropdown'
@@ -7,8 +7,8 @@ import { Picker } from '@react-native-picker/picker'
 import ParentDropdown from './dropDowm/ParentDropdown'
 import { useNavigation } from '@react-navigation/native'
 const Ola = () => {
-    const [selectedValue, setSelectedValue] = useState('option1');
-    const [Genders, setGender] = useState("yes");
+    const [selectedValue, setSelectedValue] = useState('');
+    const [Genders, setGender] = useState("1");
     const [property, setProperty] = useState("")
     const [amount, setAmount] = useState('');
     const [father, setFather] = useState('Yes');
@@ -27,32 +27,106 @@ const Ola = () => {
         // Format the number to currency
         return isNaN(num) ? '' : num.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
     }
+    function currencyToNumber(currency) {
+        // Remove currency symbols and separators
+        const cleanedCurrency = currency.replace(/[^\d.-]/g, '');
+
+        // Parse the cleaned string to a number
+        const number = parseFloat(cleanedCurrency);
+
+        // Return the number
+        return number;
+    }
+    const Amt_num = currencyToNumber(amount);
     const handleInputChange = (input) => {
         // Remove non-numeric characters
         const numericValue = input.replace(/[^0-9.]/g, '');
         // Update state with formatted currency value
         setAmount(formatCurrency(numericValue));
     };
+    const GenderAlert = () => {
+        Alert.alert(
+            'Select Gender',
+            'Please Select The Gender !',
+            [
+                {
+                    text: 'OK',
+                    onPress: () => console.log('OK Pressed')
+                }
+            ],
+            { cancelable: false }
+        );
+    };
+    const AmountAlert = () => {
+        Alert.alert(
+            'Input Amount',
+            'Please Input The Amount!',
+            [
+                {
+                    text: 'OK',
+                    onPress: () => console.log('OK Pressed')
+                }
+            ],
+            { cancelable: false }
+        );
+    };
     const parentAlive = [
         { label: 'YES', value: "1" },
         { label: 'NO', value: "0" },
-      ]
-      const data = [
+    ]
+    const [newValue, setNewValue] = useState(20);
+    const navigation = useNavigation();
+
+    const Calculate = () => {
+        if (!selectedValue) {
+            GenderAlert();
+        }
+        else if (!amount) {
+            AmountAlert();
+        }
+        else {
+            if (selectedValue == 1) {
+                console.log("this is a male")
+            }
+            else if(selectedValue==2) { console.log("this is a female") }
+            navigation.navigate('myPieChart', { data: data });
+            console.log(Amt_num - 5)
+        }
+
+    };
+    const data = [
         { name: 'Father', population: 50, color: '#297AB1', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-        { name: 'Mother', population: 30, color: '#FFC107', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-        { name: 'Son', population: 20, color: '#d9534f', legendFontColor: '#7F7F7F', legendFontSize: 15 }
-      ];
-      const navigation = useNavigation();
-      const Calculate = () => {
-        navigation.navigate('myPieChart', { data: data });
-      };
+
+        { name: 'Mother', population: 90, color: '#FFC107', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+        { name: 'Wive(s)', population: 20, color: '#d9534f', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+        { name: 'Son', population: 20, color: '#d9534f', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+        { name: 'Daughter', population: 20, color: '#ff534f', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+        { name: 'Brother', population: 20, color: '#df564f', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+        { name: 'Sister', population: 20, color: '#d9534f', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+        { name: 'Grand Father', population: 20, color: '#d9dd4f', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+        { name: 'Grand Mother', population: 20, color: '#d9c74f', legendFontColor: '#7F7F7F', legendFontSize: 15 }
+    ];
+
+
+    const newPopulationValueFather = 69
+    const newPopulationValueSon = 25;
+
+    // Changing the population values
+    data.forEach(item => {
+        if (item.name === 'Father') {
+            item.population = newPopulationValueFather;
+        } else if (item.name === 'Son') {
+            item.population = newPopulationValueSon;
+        }
+    });
+    // console.log(data)
     const wivesAlive = [
         { label: '0', value: "0" },
         { label: '1', value: "1" },
         { label: '2', value: "2" },
         { label: '3', value: "3" },
         { label: '4', value: "4" },
-      ]
+    ]
     const valueNumber = [
         { label: '0', value: "0" },
         { label: ' 1', value: '1' },
@@ -64,183 +138,184 @@ const Ola = () => {
         { label: '8', value: '8' },
         { label: '9', value: '9' },
         { label: '10', value: '10' },
-      ];
-    
+    ];
+
     return (
-      <ScrollView contentContainerStyle={styles.contentContainer}>
-        <View style={styles.container}>
-            <View style={styles.inputTitle} >
-                <View><Text style={{ marginTop: 15, fontWeight: "bold" }}>Gender Of The deceased?</Text></View>
-                <View style={{ width: 180 }}>
-                    <Picker
-                        selectedValue={selectedValue}
-                        onValueChange={(itemValue, itemIndex) =>
-                            setSelectedValue(itemValue)
-                        }>
-                        <Picker.Item label="Male/Man" value="1" />
-                        <Picker.Item label="Female/Woman" value="2" />
-                    </Picker>
+        <ScrollView contentContainerStyle={styles.contentContainer}>
+            <View style={styles.container}>
+                <View style={styles.inputTitle} >
+                    <View><Text style={{ marginTop: 15, fontWeight: "bold" }}>Gender Of The deceased?</Text></View>
+                    <View style={{ width: 180 }}>
+                        <Picker
+                            selectedValue={selectedValue}
+                            onValueChange={(itemValue, itemIndex) =>
+                                setSelectedValue(itemValue)
+                            }>
+                            <Picker.Item label="select Gender" value="" />
+                            <Picker.Item label="Male/Man" value="1" />
+                            <Picker.Item label="Female/Woman" value="2" />
+                        </Picker>
+                    </View>
                 </View>
-            </View>
-            <HorizontalLine />
-            <View style={styles.inputTitle} >
+                <HorizontalLine />
+                <View style={styles.inputTitle} >
 
-                <View>
-                    <Text style={{ marginTop: 1 }}>Property Value/Amount{"\n"}That the deceased has Left</Text></View>
-                <View style={{ width: -30 }}>
-                    <TextInput
-                        style={styles.timer}
-                        keyboardType="numeric"
-                        value={amount}
-                        onChangeText={handleInputChange}
-                        placeholder="$0.00"
-                        placeholderTextColor="#CCCCCC"
-                    />
-                </View>
+                    <View>
+                        <Text style={{ marginTop: 1 }}>Property Value/Amount{"\n"}That the deceased has Left</Text></View>
+                    <View style={{ width: -30 }}>
+                        <TextInput
+                            style={styles.timer}
+                            keyboardType="numeric"
+                            value={amount}
+                            onChangeText={handleInputChange}
+                            placeholder="$0.00"
+                            placeholderTextColor="#CCCCCC"
+                        />
+                    </View>
 
-            </View>
-            <HorizontalLine />
-            <Text style={styles.inputTitleText} >Select below the relative of the deceased which are present/Alive</Text>
-            <HorizontalLine />
-            <View style={styles.inputTitle} >
-                <View><Text style={{ marginTop: 15, fontWeight: "bold" }}>Father</Text></View>
-                <View style={{ width: 180 }}>
-                    <Picker
-                        selectedValue={father}
-                        onValueChange={(itemValue, itemIndex) =>
-                            setFather(itemValue)
-                        }>
-                        <Picker.Item label="Yes" value="10" />
-                        <Picker.Item label="No" value="23" />
-                    </Picker>
                 </View>
-            </View>
-            <HorizontalLine />
-            
-        <View style={styles.inputTitle} >
-                <View><Text style={{ marginTop: 15, fontWeight: "bold" }}>Mother</Text></View>
-                <View style={{ width: 180 }}>
-                    <Picker
-                        selectedValue={mother}
-                        onValueChange={(itemValue, itemIndex) =>
-                            setMother(itemValue)
-                        }>
-                        <Picker.Item label="Yes" value="10" />
-                        <Picker.Item label="No" value="23" />
-                    </Picker>
+                <HorizontalLine />
+                <Text style={styles.inputTitleText} >Select below the relative of the deceased which are present/Alive</Text>
+                <HorizontalLine />
+                <View style={styles.inputTitle} >
+                    <View><Text style={{ marginTop: 15, fontWeight: "bold" }}>Father</Text></View>
+                    <View style={{ width: 180 }}>
+                        <Picker
+                            selectedValue={father}
+                            onValueChange={(itemValue, itemIndex) =>
+                                setFather(itemValue)
+                            }>
+                            <Picker.Item label="Yes" value="10" />
+                            <Picker.Item label="No" value="23" />
+                        </Picker>
+                    </View>
                 </View>
-            </View>
-            <HorizontalLine />
-            <View style={styles.inputTitle} >
-                <View><Text style={{ marginTop: 15, fontWeight: "bold" }}>No. Of Wive(s)</Text></View>
-                <View style={{ width: 180 }}>
-                    <Picker
-                        selectedValue={wives}
-                        onValueChange={(itemValue, itemIndex) =>
-                            setWives(itemValue)
-                        }>
-                         {wivesAlive.map((item, index) => (
-          <Picker.Item key={index} label={item.label} value={item.value} />
-        ))}
-                    </Picker>
+                <HorizontalLine />
+
+                <View style={styles.inputTitle} >
+                    <View><Text style={{ marginTop: 15, fontWeight: "bold" }}>Mother</Text></View>
+                    <View style={{ width: 180 }}>
+                        <Picker
+                            selectedValue={mother}
+                            onValueChange={(itemValue, itemIndex) =>
+                                setMother(itemValue)
+                            }>
+                            <Picker.Item label="Yes" value="10" />
+                            <Picker.Item label="No" value="23" />
+                        </Picker>
+                    </View>
                 </View>
-            </View>
-            <HorizontalLine />
-            <View style={styles.inputTitle} >
-                <View><Text style={{ marginTop: 15, fontWeight: "bold" }}>No.OF Son(s)</Text></View>
-                <View style={{ width: 180 }}>
-                    <Picker
-                        selectedValue={son}
-                        onValueChange={(itemValue, itemIndex) =>
-                            setSon(itemValue)
-                        }>
-                         {valueNumber.map((item, index) => (
-          <Picker.Item key={index} label={item.label} value={item.value} />
-        ))}
-                    </Picker>
+                <HorizontalLine />
+                <View style={styles.inputTitle} >
+                    <View><Text style={{ marginTop: 15, fontWeight: "bold" }}>No. Of Wive(s)</Text></View>
+                    <View style={{ width: 180 }}>
+                        <Picker
+                            selectedValue={wives}
+                            onValueChange={(itemValue, itemIndex) =>
+                                setWives(itemValue)
+                            }>
+                            {wivesAlive.map((item, index) => (
+                                <Picker.Item key={index} label={item.label} value={item.value} />
+                            ))}
+                        </Picker>
+                    </View>
                 </View>
-            </View>
-            <HorizontalLine />
-            <View style={styles.inputTitle} >
-                <View><Text style={{ marginTop: 15, fontWeight: "bold" }}>No.OF Daughter(s)</Text></View>
-                <View style={{ width: 180 }}>
-                    <Picker
-                        selectedValue={daughter}
-                        onValueChange={(itemValue, itemIndex) =>
-                            setDaughter(itemValue)
-                        }>
-                         {valueNumber.map((item, index) => (
-          <Picker.Item key={index} label={item.label} value={item.value} />
-        ))}
-                    </Picker>
+                <HorizontalLine />
+                <View style={styles.inputTitle} >
+                    <View><Text style={{ marginTop: 15, fontWeight: "bold" }}>No.OF Son(s)</Text></View>
+                    <View style={{ width: 180 }}>
+                        <Picker
+                            selectedValue={son}
+                            onValueChange={(itemValue, itemIndex) =>
+                                setSon(itemValue)
+                            }>
+                            {valueNumber.map((item, index) => (
+                                <Picker.Item key={index} label={item.label} value={item.value} />
+                            ))}
+                        </Picker>
+                    </View>
                 </View>
-            </View>
-            <HorizontalLine />
-            <View style={styles.inputTitle} >
-                <View><Text style={{ marginTop: 15, fontWeight: "bold" }}>No.OF Brother(s)</Text></View>
-                <View style={{ width: 180 }}>
-                    <Picker
-                        selectedValue={borther}
-                        onValueChange={(itemValue, itemIndex) =>
-                            setBrother(itemValue)
-                        }>
-                         {valueNumber.map((item, index) => (
-          <Picker.Item key={index} label={item.label} value={item.value} />
-        ))}
-                    </Picker>
+                <HorizontalLine />
+                <View style={styles.inputTitle} >
+                    <View><Text style={{ marginTop: 15, fontWeight: "bold" }}>No.OF Daughter(s)</Text></View>
+                    <View style={{ width: 180 }}>
+                        <Picker
+                            selectedValue={daughter}
+                            onValueChange={(itemValue, itemIndex) =>
+                                setDaughter(itemValue)
+                            }>
+                            {valueNumber.map((item, index) => (
+                                <Picker.Item key={index} label={item.label} value={item.value} />
+                            ))}
+                        </Picker>
+                    </View>
                 </View>
-            </View>
-            <HorizontalLine />
-            <View style={styles.inputTitle} >
-                <View><Text style={{ marginTop: 15, fontWeight: "bold" }}>No.OF Sister(s)</Text></View>
-                <View style={{ width: 180 }}>
-                    <Picker
-                        selectedValue={sister}
-                        onValueChange={(itemValue, itemIndex) =>
-                            setSister(itemValue)
-                        }>
-                         {valueNumber.map((item, index) => (
-          <Picker.Item key={index} label={item.label} value={item.value} />
-        ))}
-                    </Picker>
+                <HorizontalLine />
+                <View style={styles.inputTitle} >
+                    <View><Text style={{ marginTop: 15, fontWeight: "bold" }}>No.OF Brother(s)</Text></View>
+                    <View style={{ width: 180 }}>
+                        <Picker
+                            selectedValue={borther}
+                            onValueChange={(itemValue, itemIndex) =>
+                                setBrother(itemValue)
+                            }>
+                            {valueNumber.map((item, index) => (
+                                <Picker.Item key={index} label={item.label} value={item.value} />
+                            ))}
+                        </Picker>
+                    </View>
                 </View>
-            </View>
-            <HorizontalLine />
-            <View style={styles.inputTitle} >
-                <View><Text style={{ marginTop: 15, fontWeight: "bold" }}>Paternal Grand{"\n"}Farther{"\n"}(Father's)</Text></View>
-                <View style={{ width: 180 }}>
-                    <Picker
-                        selectedValue={grandFather}
-                        onValueChange={(itemValue, itemIndex) =>
-                            setGrandFather(itemValue)
-                        }>
-                         {parentAlive.map((item, index) => (
-          <Picker.Item key={index} label={item.label} value={item.value} />
-        ))}
-                    </Picker>
+                <HorizontalLine />
+                <View style={styles.inputTitle} >
+                    <View><Text style={{ marginTop: 15, fontWeight: "bold" }}>No.OF Sister(s)</Text></View>
+                    <View style={{ width: 180 }}>
+                        <Picker
+                            selectedValue={sister}
+                            onValueChange={(itemValue, itemIndex) =>
+                                setSister(itemValue)
+                            }>
+                            {valueNumber.map((item, index) => (
+                                <Picker.Item key={index} label={item.label} value={item.value} />
+                            ))}
+                        </Picker>
+                    </View>
                 </View>
-            </View>
-            <HorizontalLine />
-              <View style={styles.inputTitle} >
-                <View><Text style={{ marginTop: 15, fontWeight: "bold" }}>Paternal Grand{"\n"}Mother{"\n"}(Mother's)</Text></View>
-                <View style={{ width: 180 }}>
-                    <Picker
-                        selectedValue={grandmother}
-                        onValueChange={(itemValue, itemIndex) =>
-                            setGrandMother(itemValue)
-                        }>
-                         {parentAlive.map((item, index) => (
-          <Picker.Item key={index} label={item.label} value={item.value} />
-        ))}
-                    </Picker>
+                <HorizontalLine />
+                <View style={styles.inputTitle} >
+                    <View><Text style={{ marginTop: 15, fontWeight: "bold" }}>Paternal Grand{"\n"}Farther{"\n"}(Father's)</Text></View>
+                    <View style={{ width: 180 }}>
+                        <Picker
+                            selectedValue={grandFather}
+                            onValueChange={(itemValue, itemIndex) =>
+                                setGrandFather(itemValue)
+                            }>
+                            {parentAlive.map((item, index) => (
+                                <Picker.Item key={index} label={item.label} value={item.value} />
+                            ))}
+                        </Picker>
+                    </View>
                 </View>
+                <HorizontalLine />
+                <View style={styles.inputTitle} >
+                    <View><Text style={{ marginTop: 15, fontWeight: "bold" }}>Paternal Grand{"\n"}Mother{"\n"}(Mother's)</Text></View>
+                    <View style={{ width: 180 }}>
+                        <Picker
+                            selectedValue={grandmother}
+                            onValueChange={(itemValue, itemIndex) =>
+                                setGrandMother(itemValue)
+                            }>
+                            {parentAlive.map((item, index) => (
+                                <Picker.Item key={index} label={item.label} value={item.value} />
+                            ))}
+                        </Picker>
+                    </View>
+                </View>
+                <HorizontalLine />
             </View>
-            <HorizontalLine />
-        </View>
-        <Button style={{width:78}}
-          title="Calculate"
-          onPress={Calculate}
-        />
+            <Button style={{ width: 20 }}
+                title="Calculate"
+                onPress={Calculate}
+            />
         </ScrollView>
 
     );
@@ -293,20 +368,3 @@ const styles = StyleSheet.create({
 
 
 export default Ola
-const YourComponent = () => {
-    const [selectedValue, setSelectedValue] = useState('option1');
-
-    return (
-        <View>
-            <Picker
-                selectedValue={selectedValue}
-                onValueChange={(itemValue, itemIndex) =>
-                    setSelectedValue(itemValue)
-                }>
-                <Picker.Item label="Option 1" value="option1" />
-                <Picker.Item label="Option 2" value="option2" />
-                <Picker.Item label="Option 3" value="option3" />
-            </Picker>
-        </View>
-    );
-};
