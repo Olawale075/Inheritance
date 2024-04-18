@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native'
 const Home = () => {
     const navigation = useNavigation();
     return (
-        <View style={styles.logo}>
+        <View style={styles.Container}>
             <TouchableOpacity onPress={() => navigation.navigate('olas')} style={styles.smallbuttonView1}>
                 <View>
                     <Image
@@ -15,9 +15,9 @@ const Home = () => {
                         source={require('../assets/cal.png')} // Change this to the path of your image
                         style={styles.image}
                     />
-                    <Text style={styles.ruleText}>Calculate</Text>
+                    <Text style={styles.ruleText}>CALCULATEE</Text>
                 </View>
-            </TouchableOpacity>
+            </TouchableOpacity> 
 
 
             <TouchableOpacity onPress={() => navigation.navigate('rules')} style={styles.smallbuttonView1}>
@@ -34,13 +34,14 @@ const Home = () => {
     )
 }
 const styles = StyleSheet.create({
-    logo: {
+    Container: {
         flex: 1,
-       backgroundColor:"blue",
-        flexDirection: 'row',
+       backgroundColor:'#ffffff',
+        flexDirection: 'column',
         alignItems:"center",
         justifyContent:"center",
-       
+        width: "100%",
+      
 
     },
     image:{
@@ -54,15 +55,21 @@ const styles = StyleSheet.create({
     },
     ruleText:{
         alignItems:"center",
-       paddingLeft:10,
+       paddingLeft:20,
+       color: "white",
+       
+       
        
     },
     smallbuttonView1:{
-        backgroundColor:"#fff",
+        backgroundColor:"#009fff",
         justifyContent:"space-between",
         alignItems:"center",
-       margin:40,
-       borderRadius:20
+       margin:20,
+       borderRadius:20,
+       width: "70%",
+       height: "15%",
+      
 
     }
 })
