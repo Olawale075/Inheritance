@@ -19,7 +19,7 @@ const NavigationStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name="home" component={Home} />
-      <Stack.Screen name="olas" component={Ola} />
+      <Stack.Screen name="Calculate" component={Ola} />
        <Stack.Screen name="rules" component={Rules} /> 
       <Stack.Screen name="myPieChart" component={MyPieChart} />
     </Stack.Navigator>

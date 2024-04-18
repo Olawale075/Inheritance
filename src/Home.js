@@ -8,7 +8,7 @@ const Home = () => {
     const navigation = useNavigation();
     return (
         <View style={styles.Container}>
-            <TouchableOpacity onPress={() => navigation.navigate('olas')} style={styles.smallbuttonView1}>
+            <TouchableOpacity onPress={() => navigation.navigate('Calculate')} style={styles.smallbuttonView1}>
                 <View>
                     <Image
 
